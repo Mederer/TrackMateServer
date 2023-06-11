@@ -3,7 +3,6 @@ package com.mitchelldederer.trackmateserver.jobs;
 import com.mitchelldederer.trackmateserver.categories.Category;
 import com.mitchelldederer.trackmateserver.categories.CategoryRepository;
 import com.mitchelldederer.trackmateserver.exceptions.AppEntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -20,11 +19,11 @@ public class JobService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<JobDTO> getJobs(JobStatus status) {
+    public List<JobDTO> getJobs(Optional<JobStatus> status) {
         Iterable<Job> jobs;
 
-        if (status != null) {
-            jobs = jobRepository.findAllByJobStatus(status);
+        if (status.isPresent()) {
+            jobs = jobRepository.findAllByJobStatus(status.get());
         } else {
             jobs = jobRepository.findAll();
         }
@@ -64,20 +63,6 @@ public class JobService {
         jobRepository.save(job);
 
         return JobMapper.modelToDto(job);
-
-//        Optional<Job> optionalJob = jobRepository.findById(jobId);
-//        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
-//
-//        if (optionalJob.isEmpty() || optionalCategory.isEmpty()) {
-//            return Optional.empty();
-//        } else {
-//            Job job = optionalJob.get();
-//            Category category = optionalCategory.get();
-//            job.getCategories().remove(category);
-//            jobRepository.save(job);
-//
-//            return Optional.of(JobMapper.modelToDto(job));
-//        }
     }
 
     public JobDTO updateJob(JobDTO jobDTO) {

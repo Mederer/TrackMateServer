@@ -2,7 +2,6 @@ package com.mitchelldederer.trackmateserver.jobs;
 
 import com.mitchelldederer.trackmateserver.exceptions.AppEntityNotFoundException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +17,9 @@ public class JobController {
         this.jobService = jobService;
     }
 
-
     @GetMapping("jobs")
     public ResponseEntity<List<JobDTO>> getJobs(@RequestParam(required = false) JobStatus status) {
-        System.out.println("Showing jobs for status: " + status);
-        return new ResponseEntity<>(jobService.getJobs(status), HttpStatus.OK);
+        return new ResponseEntity<>(jobService.getJobs(Optional.ofNullable(status)), HttpStatus.OK);
     }
 
     @GetMapping("jobs/{id}")
@@ -36,6 +33,17 @@ public class JobController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PutMapping("jobs")
+    public ResponseEntity<JobDTO> updateJob(@RequestBody JobDTO job) {
+        return new ResponseEntity<>(jobService.updateJob(job), HttpStatus.OK);
+    }
+
+    @DeleteMapping("jobs/{jobId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteJob(@PathVariable int jobId) {
+        jobService.deleteJob(jobId);
+    }
+
     @PostMapping("jobs/{jobId}/categories/{categoryId}")
     public ResponseEntity<JobDTO> addCategoryToJob(@PathVariable int jobId, @PathVariable int categoryId) {
         JobDTO jobDTO = jobService.addCategoryToJob(jobId, categoryId);
@@ -43,20 +51,8 @@ public class JobController {
         return new ResponseEntity<>(jobDTO, HttpStatus.OK);
     }
 
-    @PutMapping("jobs")
-    public ResponseEntity<JobDTO> updateJob(@RequestBody JobDTO job) {
-        return new ResponseEntity<>(jobService.updateJob(job), HttpStatus.OK);
-
-    }
-
     @DeleteMapping("jobs/{jobId}/categories/{categoryId}")
     public ResponseEntity<JobDTO> removeCategoryFromJob(@PathVariable int jobId, @PathVariable int categoryId) {
         return new ResponseEntity<>(jobService.removeCategoryFromJob(jobId, categoryId), HttpStatus.OK);
-    }
-
-    @DeleteMapping("jobs/{jobId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteJob(@PathVariable int jobId) {
-        jobService.deleteJob(jobId);
     }
 }
