@@ -1,12 +1,12 @@
 package com.mitchelldederer.trackmateserver.categories;
 
 import com.mitchelldederer.trackmateserver.exceptions.AppEntityNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Service
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;

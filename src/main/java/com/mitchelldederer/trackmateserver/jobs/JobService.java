@@ -3,13 +3,13 @@ package com.mitchelldederer.trackmateserver.jobs;
 import com.mitchelldederer.trackmateserver.categories.Category;
 import com.mitchelldederer.trackmateserver.categories.CategoryRepository;
 import com.mitchelldederer.trackmateserver.exceptions.AppEntityNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Service
 public class JobService {
     private final JobRepository jobRepository;
     private final CategoryRepository categoryRepository;
