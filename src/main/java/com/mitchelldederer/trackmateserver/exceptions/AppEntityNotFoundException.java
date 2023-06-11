@@ -1,2 +1,8 @@
-package com.mitchelldederer.trackmateserver.exceptions;public class AppEntityNotFoundException {
+package com.mitchelldederer.trackmateserver.exceptions;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Entity was not found.")
+public class AppEntityNotFoundException extends RuntimeException {
 }

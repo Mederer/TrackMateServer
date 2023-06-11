@@ -3,6 +3,7 @@ package com.mitchelldederer.trackmateserver.jobs;
 import com.mitchelldederer.trackmateserver.categories.Category;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity(name = "jobs")
@@ -29,9 +30,9 @@ public class Job {
             joinColumns = @JoinColumn(name = "job_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private Set<Category> categories;
+    private List<Category> categories;
 
-    public Job(int jobId, String jobName, String jobDescription, JobStatus jobStatus, Set<Category> categories) {
+    public Job(int jobId, String jobName, String jobDescription, JobStatus jobStatus, List<Category> categories) {
         this.jobId = jobId;
         this.jobName = jobName;
         this.jobDescription = jobDescription;
@@ -74,11 +75,11 @@ public class Job {
         this.jobDescription = jobDescription;
     }
 
-    public Set<Category> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(Set<Category> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 
@@ -88,6 +89,7 @@ public class Job {
                 "jobId=" + jobId +
                 ", jobName='" + jobName + '\'' +
                 ", jobDescription='" + jobDescription + '\'' +
+                ", jobStatus=" + jobStatus +
                 ", categories=" + categories +
                 '}';
     }

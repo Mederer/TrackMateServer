@@ -2,6 +2,7 @@ package com.mitchelldederer.trackmateserver.jobs;
 
 import com.mitchelldederer.trackmateserver.categories.Category;
 import com.mitchelldederer.trackmateserver.categories.CategoryRepository;
+import com.mitchelldederer.trackmateserver.exceptions.AppEntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,8 +35,9 @@ public class JobService {
         return jobDTOList;
     }
 
-    public Optional<JobDTO> getJob(int id) {
-        return jobRepository.findById(id).map(JobMapper::modelToDto);
+    public JobDTO getJob(int id) {
+        Job job =  jobRepository.findById(id).orElseThrow(AppEntityNotFoundException::new);
+        return JobMapper.modelToDto(job);
     }
 
     public void createJob(JobDTO job) {
@@ -45,48 +47,51 @@ public class JobService {
         jobRepository.save(newJob);
     }
 
-    public Optional<JobDTO> addCategoryToJob(int jobId, int categoryId) {
-        Optional<Job> optionalJob = jobRepository.findById(jobId);
-        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+    public JobDTO addCategoryToJob(int jobId, int categoryId) {
+        Job job = jobRepository.findById(jobId).orElseThrow(AppEntityNotFoundException::new);
+        Category category = categoryRepository.findById(categoryId).orElseThrow(AppEntityNotFoundException::new);
 
-        if (optionalJob.isEmpty() || optionalCategory.isEmpty()) {
-            return Optional.empty();
-        } else {
-            Job job = optionalJob.get();
-            Category category = optionalCategory.get();
-            job.getCategories().add(category);
-            jobRepository.save(job);
-
-            return Optional.of(JobMapper.modelToDto(job));
-        }
+        job.getCategories().add(category);
+        jobRepository.save(job);
+        return JobMapper.modelToDto(job);
     }
 
-    public Optional<JobDTO> removeCategoryFromJob(int jobId, int categoryId) {
-        Optional<Job> optionalJob = jobRepository.findById(jobId);
-        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+    public JobDTO removeCategoryFromJob(int jobId, int categoryId) {
+        Job job = jobRepository.findById(jobId).orElseThrow(AppEntityNotFoundException::new);
+        Category category = categoryRepository.findById(categoryId).orElseThrow(AppEntityNotFoundException::new);
 
-        if (optionalJob.isEmpty() || optionalCategory.isEmpty()) {
-            return Optional.empty();
-        } else {
-            Job job = optionalJob.get();
-            Category category = optionalCategory.get();
-            job.getCategories().remove(category);
-            jobRepository.save(job);
+        job.getCategories().remove(category);
+        jobRepository.save(job);
 
-            return Optional.of(JobMapper.modelToDto(job));
-        }
+        return JobMapper.modelToDto(job);
+
+//        Optional<Job> optionalJob = jobRepository.findById(jobId);
+//        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+//
+//        if (optionalJob.isEmpty() || optionalCategory.isEmpty()) {
+//            return Optional.empty();
+//        } else {
+//            Job job = optionalJob.get();
+//            Category category = optionalCategory.get();
+//            job.getCategories().remove(category);
+//            jobRepository.save(job);
+//
+//            return Optional.of(JobMapper.modelToDto(job));
+//        }
     }
 
-    public Optional<JobDTO> updateStatus(int jobId, JobStatus status) {
-        Optional<Job> optionalJob = jobRepository.findById(jobId);
+    public JobDTO updateJob(JobDTO jobDTO) {
+        Job job = jobRepository.findById(jobDTO.jobId()).orElseThrow(AppEntityNotFoundException::new);
 
-        if (optionalJob.isEmpty()) {
-            return Optional.empty();
-        } else {
-            Job job = optionalJob.get();
-            job.setJobStatus(status);
-            jobRepository.save(job);
-            return Optional.of(JobMapper.modelToDto(job));
-        }
+        job.setJobStatus(jobDTO.jobStatus());
+        job.setJobName(jobDTO.jobName());
+        job.setJobDescription(jobDTO.jobDescription());
+
+        jobRepository.save(job);
+        return JobMapper.modelToDto(job);
+    }
+
+    public void deleteJob(int jobId) {
+        jobRepository.deleteById(jobId);
     }
 }

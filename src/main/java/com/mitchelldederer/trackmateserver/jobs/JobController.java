@@ -1,5 +1,6 @@
 package com.mitchelldederer.trackmateserver.jobs;
 
+import com.mitchelldederer.trackmateserver.exceptions.AppEntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -25,49 +26,37 @@ public class JobController {
     }
 
     @GetMapping("jobs/{id}")
-    public ResponseEntity<JobDTO> getJob(@PathVariable int id) {
-        Optional<JobDTO> optJob = jobService.getJob(id);
-
-        if (optJob.isEmpty()) {
-            return new ResponseEntity<>(HttpStatusCode.valueOf(404));
-        } else {
-            return new ResponseEntity<>(optJob.get(), HttpStatusCode.valueOf(200));
-        }
+    public ResponseEntity<JobDTO> getJob(@PathVariable int id) throws AppEntityNotFoundException {
+        return new ResponseEntity<>(jobService.getJob(id), HttpStatus.OK);
     }
 
     @PostMapping("jobs")
     public ResponseEntity<JobDTO> createJob(@RequestBody JobDTO newJob) {
-        System.out.println("Recieved new job: " + newJob);
         jobService.createJob(newJob);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("jobs/{jobId}/categories/{categoryId}")
+    @PostMapping("jobs/{jobId}/categories/{categoryId}")
     public ResponseEntity<JobDTO> addCategoryToJob(@PathVariable int jobId, @PathVariable int categoryId) {
-        Optional<JobDTO> optionalJobDTO = jobService.addCategoryToJob(jobId, categoryId);
+        JobDTO jobDTO = jobService.addCategoryToJob(jobId, categoryId);
 
-        if (optionalJobDTO.isPresent()) {
-            return new ResponseEntity<>(optionalJobDTO.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(jobDTO, HttpStatus.OK);
     }
 
-    @PostMapping("jobs/{jobId}/update-status/{status}")
-    public ResponseEntity<JobDTO> updateStatus(@PathVariable int jobId, @PathVariable JobStatus status) {
-        Optional<JobDTO> optionalJobDTO = jobService.updateStatus(jobId, status);
+    @PutMapping("jobs")
+    public ResponseEntity<JobDTO> updateJob(@RequestBody JobDTO job) {
+        return new ResponseEntity<>(jobService.updateJob(job), HttpStatus.OK);
 
-        if (optionalJobDTO.isPresent()) {
-            return new ResponseEntity<>(optionalJobDTO.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
     @DeleteMapping("jobs/{jobId}/categories/{categoryId}")
     public ResponseEntity<JobDTO> removeCategoryFromJob(@PathVariable int jobId, @PathVariable int categoryId) {
-        Optional<JobDTO> optionalJobDTO = jobService.removeCategoryFromJob(jobId, categoryId);
+        return new ResponseEntity<>(jobService.removeCategoryFromJob(jobId, categoryId), HttpStatus.OK);
+    }
 
-        return optionalJobDTO.map(jobDTO -> new ResponseEntity<>(jobDTO, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @DeleteMapping("jobs/{jobId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteJob(@PathVariable int jobId) {
+        jobService.deleteJob(jobId);
     }
 }

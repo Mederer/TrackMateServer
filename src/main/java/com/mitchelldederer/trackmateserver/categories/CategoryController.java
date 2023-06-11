@@ -2,10 +2,7 @@ package com.mitchelldederer.trackmateserver.categories;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,8 +20,24 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.getCategories(), HttpStatus.OK);
     }
 
+    @GetMapping("categories/{categoryId}")
+    public ResponseEntity<CategoryDTO> getCategory(@PathVariable int categoryId) {
+        return new ResponseEntity<>(categoryService.getCategory(categoryId), HttpStatus.OK);
+    }
+
     @PostMapping("categories")
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO newCategory) {
         return new ResponseEntity<>(categoryService.createCategory(newCategory), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("categories/{categoryId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCategory(@PathVariable int categoryId) {
+        categoryService.deleteCategory(categoryId);
+    }
+
+    @PutMapping("/categories")
+    public ResponseEntity<CategoryDTO> updateCategory(@RequestBody CategoryDTO updatedCategoryDto) {
+        return new ResponseEntity<>(categoryService.updateCategory(updatedCategoryDto), HttpStatus.OK);
     }
 }
