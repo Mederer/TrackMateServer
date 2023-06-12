@@ -1,5 +1,6 @@
 package com.mitchelldederer.trackmateserver.jobs;
 
+import com.mitchelldederer.trackmateserver.address.Address;
 import com.mitchelldederer.trackmateserver.categories.Category;
 import jakarta.persistence.*;
 
@@ -24,6 +25,10 @@ public class Job {
     @Enumerated(EnumType.STRING)
     private JobStatus jobStatus;
 
+    @ManyToOne()
+    @JoinColumn(name = "address_id")
+    private Address address;
+
     @ManyToMany
     @JoinTable(
             name = "job_categories",
@@ -32,15 +37,25 @@ public class Job {
     )
     private List<Category> categories;
 
-    public Job(int jobId, String jobName, String jobDescription, JobStatus jobStatus, List<Category> categories) {
+
+    public Job() {
+    }
+
+    public Job(int jobId, String jobName, String jobDescription, JobStatus jobStatus, Address address, List<Category> categories) {
         this.jobId = jobId;
         this.jobName = jobName;
         this.jobDescription = jobDescription;
         this.jobStatus = jobStatus;
+        this.address = address;
         this.categories = categories;
     }
 
-    public Job() {
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public JobStatus getJobStatus() {

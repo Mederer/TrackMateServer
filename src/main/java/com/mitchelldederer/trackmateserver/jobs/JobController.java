@@ -1,6 +1,7 @@
 package com.mitchelldederer.trackmateserver.jobs;
 
 import com.mitchelldederer.trackmateserver.exceptions.AppEntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ public class JobController {
 
     private final JobService jobService;
 
+    @Autowired
     public JobController(JobService jobService) {
         this.jobService = jobService;
     }
@@ -23,14 +25,13 @@ public class JobController {
     }
 
     @GetMapping("jobs/{id}")
-    public ResponseEntity<JobDTO> getJob(@PathVariable int id) throws AppEntityNotFoundException {
+    public ResponseEntity<JobDTO> getJob(@PathVariable int id) {
         return new ResponseEntity<>(jobService.getJob(id), HttpStatus.OK);
     }
 
     @PostMapping("jobs")
     public ResponseEntity<JobDTO> createJob(@RequestBody JobDTO newJob) {
-        jobService.createJob(newJob);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(jobService.createJob(newJob), HttpStatus.CREATED);
     }
 
     @PutMapping("jobs")
@@ -54,5 +55,10 @@ public class JobController {
     @DeleteMapping("jobs/{jobId}/categories/{categoryId}")
     public ResponseEntity<JobDTO> removeCategoryFromJob(@PathVariable int jobId, @PathVariable int categoryId) {
         return new ResponseEntity<>(jobService.removeCategoryFromJob(jobId, categoryId), HttpStatus.OK);
+    }
+
+    @PostMapping("jobs/{jobId}/address/{addressId}")
+    public ResponseEntity<JobDTO> setJobAddress(@PathVariable int jobId, @PathVariable int addressId) {
+        return new ResponseEntity<>(jobService.setJobAddress(jobId, addressId), HttpStatus.OK);
     }
 }

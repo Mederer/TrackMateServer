@@ -1,5 +1,7 @@
 package com.mitchelldederer.trackmateserver.jobs;
 
+import com.mitchelldederer.trackmateserver.address.Address;
+import com.mitchelldederer.trackmateserver.address.AddressRepository;
 import com.mitchelldederer.trackmateserver.categories.Category;
 import com.mitchelldederer.trackmateserver.categories.CategoryRepository;
 import com.mitchelldederer.trackmateserver.exceptions.AppEntityNotFoundException;
@@ -14,9 +16,12 @@ public class JobService {
     private final JobRepository jobRepository;
     private final CategoryRepository categoryRepository;
 
-    public JobService(JobRepository jobRepository, CategoryRepository categoryRepository) {
+    private final AddressRepository addressRepository;
+
+    public JobService(JobRepository jobRepository, CategoryRepository categoryRepository, AddressRepository addressRepository) {
         this.jobRepository = jobRepository;
         this.categoryRepository = categoryRepository;
+        this.addressRepository = addressRepository;
     }
 
     public List<JobDTO> getJobs(Optional<JobStatus> status) {
@@ -39,11 +44,11 @@ public class JobService {
         return JobMapper.modelToDto(job);
     }
 
-    public void createJob(JobDTO job) {
+    public JobDTO createJob(JobDTO job) {
         Job newJob = JobMapper.dtoToModel(job);
         newJob.setJobStatus(JobStatus.WAITING);
-        System.out.println("Saving Job: " + newJob);
         jobRepository.save(newJob);
+        return JobMapper.modelToDto(newJob);
     }
 
     public JobDTO addCategoryToJob(int jobId, int categoryId) {
@@ -62,6 +67,16 @@ public class JobService {
         job.getCategories().remove(category);
         jobRepository.save(job);
 
+        return JobMapper.modelToDto(job);
+    }
+
+    public JobDTO setJobAddress(int jobId, int addressId) {
+        Job job = jobRepository.findById(jobId).orElseThrow(AppEntityNotFoundException::new);
+        Address address = addressRepository.findById(addressId).orElseThrow(AppEntityNotFoundException::new);
+
+        job.setAddress(address);
+
+        jobRepository.save(job);
         return JobMapper.modelToDto(job);
     }
 
