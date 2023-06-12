@@ -31,4 +31,15 @@ public class AddressController {
     public ResponseEntity<AddressDTO> getAddress(@PathVariable int addressId) {
         return new ResponseEntity<>(addressService.getAddress(addressId), HttpStatus.OK);
     }
+
+    @PutMapping("addresses")
+    public ResponseEntity<AddressDTO> updateAddress(@RequestBody AddressDTO addressDTO) {
+        return new ResponseEntity<>(addressService.updateAddress(addressDTO), HttpStatus.OK);
+    }
+
+    @DeleteMapping("address/{addressId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAddress(@PathVariable int addressId) {
+        addressService.deleteAddress(addressId);
+    }
 }

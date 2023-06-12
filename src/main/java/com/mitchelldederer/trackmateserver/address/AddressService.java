@@ -46,4 +46,21 @@ public class AddressService {
 
         return AddressMapper.modelToDto(address);
     }
+
+    public AddressDTO updateAddress(AddressDTO addressDTO) {
+        Address address = addressRepository.findById(addressDTO.addressId()).orElseThrow(AppEntityNotFoundException::new);
+
+        address.setStreetNumber(addressDTO.streetNumber());
+        address.setStreetName(addressDTO.streetName());
+        address.setSuburb(addressDTO.suburb());
+        address.setPostcode(addressDTO.postcode());
+        address.setState(addressDTO.state());
+
+        addressRepository.save(address);
+        return AddressMapper.modelToDto(address);
+    }
+
+    public void deleteAddress(int addressId) {
+        addressRepository.deleteById(addressId);
+    }
 }
