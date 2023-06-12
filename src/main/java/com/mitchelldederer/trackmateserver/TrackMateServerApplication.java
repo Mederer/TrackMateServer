@@ -37,6 +37,9 @@ public class TrackMateServerApplication {
             List<Job> jobList = new ArrayList<>();
             jobList.add(new Job(0, "House rewire", "House needs a rewire", JobStatus.WAITING, null, null));
 
+            jobList.get(0).setAddress(addressList.get(0));
+            jobList.get(0).setCategories(categoryList);
+
             categoryRepository.saveAll(categoryList);
             addressRepository.saveAll(addressList);
             jobRepository.saveAll(jobList);
