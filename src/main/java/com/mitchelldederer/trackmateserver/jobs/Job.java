@@ -1,5 +1,6 @@
 package com.mitchelldederer.trackmateserver.jobs;
 
+import com.mitchelldederer.trackmateserver.address.Address;
 import com.mitchelldederer.trackmateserver.categories.Category;
 import jakarta.persistence.*;
 
