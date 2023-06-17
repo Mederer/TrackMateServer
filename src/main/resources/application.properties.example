@@ -1,3 +1,4 @@
-spring.datasource.url=<jdbc:postgresql://<localhost>:<port>/<databasename>>
+spring.datasource.url=jdbc:postgresql://<host>:<port>/<databasename>
 spring.datasource.username=<username>
 spring.datasource.password=<password>
+spring.jpa.hibernate.ddl-auto=create

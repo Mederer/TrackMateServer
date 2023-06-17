@@ -20,7 +20,8 @@ public class JobMapper {
                 job.getJobName(),
                 job.getJobDescription(),
                 job.getJobStatus(),
-                job.getCategories().stream().map(CategoryMapper::modelToDto).collect(Collectors.toList())
+                job.getCategories() != null ?  job.getCategories().stream().map(CategoryMapper::modelToDto).collect(Collectors.toList()) : null,
+                job.getAddress()
         );
     }
 }
