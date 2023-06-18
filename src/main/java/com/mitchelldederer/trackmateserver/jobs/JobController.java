@@ -19,6 +19,12 @@ public class JobController {
         this.jobService = jobService;
     }
 
+    @PostMapping("jobs/test-create")
+    public ResponseEntity<JobDTO> createJobTest(@RequestBody CreateJobRequest jobRequest) {
+        JobDTO newJobDto = jobService.createJobTest(jobRequest);
+        return new ResponseEntity<>(newJobDto, HttpStatus.CREATED);
+    }
+
     @GetMapping("jobs")
     public ResponseEntity<List<JobDTO>> getJobs(@RequestParam(required = false) JobStatus status) {
         return new ResponseEntity<>(jobService.getJobs(Optional.ofNullable(status)), HttpStatus.OK);
@@ -61,4 +67,6 @@ public class JobController {
     public ResponseEntity<JobDTO> setJobAddress(@PathVariable int jobId, @PathVariable int addressId) {
         return new ResponseEntity<>(jobService.setJobAddress(jobId, addressId), HttpStatus.OK);
     }
+
+
 }

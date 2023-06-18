@@ -23,15 +23,28 @@ public class Address {
     @Column(name = "postcode")
     private String postcode;
 
+    @Column(name = "state")
+    @Enumerated(EnumType.STRING)
+    private State state;
+
     public Address() {
     }
 
-    public Address(int addressId, String streetNumber, String streetName, String suburb, String postcode) {
+    public Address(int addressId, String streetNumber, String streetName, String suburb, String postcode, State state) {
         this.addressId = addressId;
         this.streetNumber = streetNumber;
         this.streetName = streetName;
         this.suburb = suburb;
         this.postcode = postcode;
+        this.state = state;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 
     public int getAddressId() {
@@ -82,6 +95,7 @@ public class Address {
                 ", streetName='" + streetName + '\'' +
                 ", suburb='" + suburb + '\'' +
                 ", postcode='" + postcode + '\'' +
+                ", state=" + state +
                 '}';
     }
 }

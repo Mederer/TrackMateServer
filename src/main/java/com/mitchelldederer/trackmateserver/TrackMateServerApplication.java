@@ -29,16 +29,25 @@ public class TrackMateServerApplication {
                                          CategoryRepository categoryRepository) {
         return runner -> {
             List<Category> categoryList = new ArrayList<>();
-            categoryList.add(new Category(0, "Electrical", "Electrical work", null));
+            categoryList.add(new Category(0, "Electrical", "Electrical work.", null));
+            categoryList.add(new Category(0, "Cleaning", "Jobs requiring a skilled cleaner.", null));
+            categoryList.add(new Category(0, "Plumbing", "Jobs requiring a licensed plumber.", null));
+
+
 
             List<Address> addressList = new ArrayList<>();
-            addressList.add(new Address(0, "104", "River Street", "West Kempsey", State.NSW, "2440"));
+            addressList.add(new Address(0, "104", "Fake Street", "West Courts", "2441", State.NSW));
+            addressList.add(new Address(0, "169", "Tristram Lane", "Hellvin", "1234", State.VIC));
+            addressList.add(new Address(0, "2", "Mackston Blvd", "Meckle", "2341", State.QLD));
+
 
             List<Job> jobList = new ArrayList<>();
             jobList.add(new Job(0, "House rewire", "House needs a rewire", JobStatus.WAITING, null, null));
 
             jobList.get(0).setAddress(addressList.get(0));
-            jobList.get(0).setCategories(categoryList);
+            jobList.get(0).setCategories(List.of(
+                    categoryList.get(0)
+            ));
 
             categoryRepository.saveAll(categoryList);
             addressRepository.saveAll(addressList);

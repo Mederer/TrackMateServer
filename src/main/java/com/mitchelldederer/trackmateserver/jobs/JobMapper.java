@@ -1,5 +1,6 @@
 package com.mitchelldederer.trackmateserver.jobs;
 
+import com.mitchelldederer.trackmateserver.address.AddressMapper;
 import com.mitchelldederer.trackmateserver.categories.CategoryMapper;
 
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class JobMapper {
                 job.getJobDescription(),
                 job.getJobStatus(),
                 job.getCategories() != null ?  job.getCategories().stream().map(CategoryMapper::modelToDto).collect(Collectors.toList()) : null,
-                job.getAddress()
+                AddressMapper.modelToDto(job.getAddress())
         );
     }
 }

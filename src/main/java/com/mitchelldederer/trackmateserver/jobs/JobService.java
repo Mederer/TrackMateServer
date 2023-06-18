@@ -8,8 +8,10 @@ import com.mitchelldederer.trackmateserver.exceptions.AppEntityNotFoundException
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class JobService {
@@ -48,6 +50,23 @@ public class JobService {
         Job newJob = JobMapper.dtoToModel(job);
         newJob.setJobStatus(JobStatus.WAITING);
         jobRepository.save(newJob);
+        return JobMapper.modelToDto(newJob);
+    }
+
+    public JobDTO createJobTest(CreateJobRequest jobRequest) {
+        Job newJob = new Job();
+
+        List<Category> categories = Arrays.stream(jobRequest.categoryIds()).mapToObj(category -> categoryRepository.findById(category).orElseThrow(AppEntityNotFoundException::new)).toList();
+        Address address = addressRepository.findById(jobRequest.addressId()).orElseThrow(AppEntityNotFoundException::new);
+
+        newJob.setJobName(jobRequest.jobName());
+        newJob.setJobDescription(jobRequest.jobDescription());
+        newJob.setJobStatus(JobStatus.WAITING);
+        newJob.setCategories(categories);
+        newJob.setAddress(address);
+
+        jobRepository.save(newJob);
+
         return JobMapper.modelToDto(newJob);
     }
 

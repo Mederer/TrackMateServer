@@ -1,6 +1,7 @@
 package com.mitchelldederer.trackmateserver.jobs;
 
 import com.mitchelldederer.trackmateserver.address.Address;
+import com.mitchelldederer.trackmateserver.address.AddressDTO;
 import com.mitchelldederer.trackmateserver.categories.CategoryDTO;
 
 import java.util.List;
@@ -11,5 +12,5 @@ public record JobDTO(
         String jobDescription,
         JobStatus jobStatus,
         List<CategoryDTO> categories,
-        Address address
+        AddressDTO address
 ) { }

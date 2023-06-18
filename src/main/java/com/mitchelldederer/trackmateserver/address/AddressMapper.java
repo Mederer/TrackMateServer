@@ -18,8 +18,8 @@ public class AddressMapper {
                 addressDTO.streetNumber(),
                 addressDTO.streetName(),
                 addressDTO.suburb(),
-                addressDTO.state(),
-                addressDTO.postcode()
+                addressDTO.postcode(),
+                addressDTO.state()
         );
     }
 }
