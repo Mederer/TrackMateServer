@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class JobService {
@@ -42,7 +41,7 @@ public class JobService {
     }
 
     public JobDTO getJob(int id) {
-        Job job =  jobRepository.findById(id).orElseThrow(AppEntityNotFoundException::new);
+        Job job = jobRepository.findById(id).orElseThrow(AppEntityNotFoundException::new);
         return JobMapper.modelToDto(job);
     }
 

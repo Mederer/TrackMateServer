@@ -37,7 +37,6 @@ public class Job {
     )
     private List<Category> categories;
 
-
     public Job() {
     }
 

@@ -20,7 +20,7 @@ public class JobController {
     }
 
     @PostMapping("jobs")
-    public ResponseEntity<JobDTO> createJobTest(@RequestBody CreateJobRequest jobRequest) {
+    public ResponseEntity<JobDTO> createJob(@RequestBody CreateJobRequest jobRequest) {
         JobDTO newJobDto = jobService.createJob(jobRequest);
         return new ResponseEntity<>(newJobDto, HttpStatus.CREATED);
     }
@@ -62,6 +62,4 @@ public class JobController {
     public ResponseEntity<JobDTO> setJobAddress(@PathVariable int jobId, @PathVariable int addressId) {
         return new ResponseEntity<>(jobService.setJobAddress(jobId, addressId), HttpStatus.OK);
     }
-
-
 }

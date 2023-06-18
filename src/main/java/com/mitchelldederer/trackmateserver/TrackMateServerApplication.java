@@ -32,6 +32,7 @@ public class TrackMateServerApplication {
             categoryList.add(new Category(0, "Electrical", "Electrical work.", null));
             categoryList.add(new Category(0, "Cleaning", "Jobs requiring a skilled cleaner.", null));
             categoryList.add(new Category(0, "Plumbing", "Jobs requiring a licensed plumber.", null));
+            categoryList.add(new Category(0, "Customer Service", "Jobs requiring a sexy customer service agent", null));
 
 
 
