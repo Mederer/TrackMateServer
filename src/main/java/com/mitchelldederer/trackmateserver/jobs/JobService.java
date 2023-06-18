@@ -46,14 +46,7 @@ public class JobService {
         return JobMapper.modelToDto(job);
     }
 
-    public JobDTO createJob(JobDTO job) {
-        Job newJob = JobMapper.dtoToModel(job);
-        newJob.setJobStatus(JobStatus.WAITING);
-        jobRepository.save(newJob);
-        return JobMapper.modelToDto(newJob);
-    }
-
-    public JobDTO createJobTest(CreateJobRequest jobRequest) {
+    public JobDTO createJob(CreateJobRequest jobRequest) {
         Job newJob = new Job();
 
         List<Category> categories = Arrays.stream(jobRequest.categoryIds()).mapToObj(category -> categoryRepository.findById(category).orElseThrow(AppEntityNotFoundException::new)).toList();

@@ -19,9 +19,9 @@ public class JobController {
         this.jobService = jobService;
     }
 
-    @PostMapping("jobs/test-create")
+    @PostMapping("jobs")
     public ResponseEntity<JobDTO> createJobTest(@RequestBody CreateJobRequest jobRequest) {
-        JobDTO newJobDto = jobService.createJobTest(jobRequest);
+        JobDTO newJobDto = jobService.createJob(jobRequest);
         return new ResponseEntity<>(newJobDto, HttpStatus.CREATED);
     }
 
@@ -33,11 +33,6 @@ public class JobController {
     @GetMapping("jobs/{id}")
     public ResponseEntity<JobDTO> getJob(@PathVariable int id) {
         return new ResponseEntity<>(jobService.getJob(id), HttpStatus.OK);
-    }
-
-    @PostMapping("jobs")
-    public ResponseEntity<JobDTO> createJob(@RequestBody JobDTO newJob) {
-        return new ResponseEntity<>(jobService.createJob(newJob), HttpStatus.CREATED);
     }
 
     @PutMapping("jobs")
