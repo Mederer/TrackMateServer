@@ -11,15 +11,4 @@ public class AddressMapper {
                 address.getPostcode()
         );
     }
-
-    public static Address dtoToModel(AddressDTO addressDTO) {
-        return new Address(
-                addressDTO.addressId(),
-                addressDTO.streetNumber(),
-                addressDTO.streetName(),
-                addressDTO.suburb(),
-                addressDTO.postcode(),
-                addressDTO.state()
-        );
-    }
 }

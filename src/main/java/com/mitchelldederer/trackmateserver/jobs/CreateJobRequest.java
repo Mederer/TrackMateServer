@@ -1,9 +1,14 @@
 package com.mitchelldederer.trackmateserver.jobs;
 
-public record CreateJobRequest (
+import com.mitchelldederer.trackmateserver.address.Address;
+
+import java.util.Optional;
+
+public record CreateJobRequest(
         String jobName,
         String jobDescription,
-        int[] categoryIds,
-        int addressId
+
+        Optional<Integer[]> categories,
+        Optional<Integer> addressId
 ) {
 }

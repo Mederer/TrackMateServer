@@ -1,16 +1,15 @@
 package com.mitchelldederer.trackmateserver.jobs;
 
 import com.mitchelldederer.trackmateserver.address.Address;
+import com.mitchelldederer.trackmateserver.address.AddressDTO;
+import com.mitchelldederer.trackmateserver.address.AddressMapper;
 import com.mitchelldederer.trackmateserver.address.AddressRepository;
 import com.mitchelldederer.trackmateserver.categories.Category;
 import com.mitchelldederer.trackmateserver.categories.CategoryRepository;
 import com.mitchelldederer.trackmateserver.exceptions.AppEntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class JobService {
@@ -45,21 +44,27 @@ public class JobService {
         return JobMapper.modelToDto(job);
     }
 
-    public JobDTO createJob(CreateJobRequest jobRequest) {
-        Job newJob = new Job();
+    public JobDTO createJob(CreateJobRequest createJobRequest) {
+        Job job = new Job();
 
-        List<Category> categories = Arrays.stream(jobRequest.categoryIds()).mapToObj(category -> categoryRepository.findById(category).orElseThrow(AppEntityNotFoundException::new)).toList();
-        Address address = addressRepository.findById(jobRequest.addressId()).orElseThrow(AppEntityNotFoundException::new);
+        job.setJobName(createJobRequest.jobName());
+        job.setJobDescription(createJobRequest.jobDescription());
+        job.setJobStatus(JobStatus.WAITING);
 
-        newJob.setJobName(jobRequest.jobName());
-        newJob.setJobDescription(jobRequest.jobDescription());
-        newJob.setJobStatus(JobStatus.WAITING);
-        newJob.setCategories(categories);
-        newJob.setAddress(address);
+        if (createJobRequest.addressId().isPresent()) {
+            Address address = addressRepository.findById(createJobRequest.addressId().get()).orElseThrow(AppEntityNotFoundException::new);
+            job.setAddress(address);
+        }
 
-        jobRepository.save(newJob);
+        if (createJobRequest.categories().isPresent()) {
+            List<Integer> categoryIds = Arrays.asList(createJobRequest.categories().get());
+            Iterable<Category> categoryList = categoryRepository.findAllById(categoryIds);
+            job.setCategories((List<Category>)categoryList);
+        }
 
-        return JobMapper.modelToDto(newJob);
+        jobRepository.save(job);
+
+        return JobMapper.modelToDto(job);
     }
 
     public JobDTO addCategoryToJob(int jobId, int categoryId) {
@@ -91,12 +96,19 @@ public class JobService {
         return JobMapper.modelToDto(job);
     }
 
-    public JobDTO updateJob(JobDTO jobDTO) {
-        Job job = jobRepository.findById(jobDTO.jobId()).orElseThrow(AppEntityNotFoundException::new);
+    public AddressDTO getJobAddress(int jobId) {
+        Job job = jobRepository.findById(jobId).orElseThrow(AppEntityNotFoundException::new);
+        Address address = job.getAddress();
 
-        job.setJobStatus(jobDTO.jobStatus());
-        job.setJobName(jobDTO.jobName());
-        job.setJobDescription(jobDTO.jobDescription());
+        return AddressMapper.modelToDto(address);
+    }
+
+    public JobDTO updateJob(UpdateJobRequest updateJobRequest) {
+        Job job = jobRepository.findById(updateJobRequest.jobId()).orElseThrow(AppEntityNotFoundException::new);
+
+        job.setJobName(updateJobRequest.jobName());
+        job.setJobDescription(updateJobRequest.jobDescription());
+        job.setJobStatus(updateJobRequest.jobStatus());
 
         jobRepository.save(job);
         return JobMapper.modelToDto(job);

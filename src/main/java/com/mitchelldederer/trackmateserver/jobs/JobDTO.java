@@ -10,7 +10,5 @@ public record JobDTO(
         int jobId,
         String jobName,
         String jobDescription,
-        JobStatus jobStatus,
-        List<CategoryDTO> categories,
-        AddressDTO address
+        JobStatus jobStatus
 ) { }
